@@ -171,5 +171,27 @@ function downloadCSV() {
     document.body.removeChild(a)
 }
 
+function clearData() {
+
+    if (csvRows.length === 0) {
+
+        alert("No data to clear")
+
+        return
+    }
+
+    let confirmClear = confirm(
+        "Are you sure you want to delete all data?"
+    )
+
+    if (confirmClear) {
+
+        csvRows = []
+
+        alert("All data cleared")
+
+    }
+}
+
 createPlayers()
 createSliders()
