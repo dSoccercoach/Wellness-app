@@ -2,6 +2,27 @@ let selectedPlayer = null
 
 let csvRows = []
 
+// Load saved data when the app starts
+function loadData() {
+
+    let saved = localStorage.getItem("playerFeedbackData")
+
+    if (saved) {
+        csvRows = JSON.parse(saved)
+        console.log("Loaded", csvRows.length, "rows from storage")
+    }
+}
+
+// Save data persistently
+function saveData() {
+
+    localStorage.setItem(
+        "playerFeedbackData",
+        JSON.stringify(csvRows)
+    )
+}
+
+
 const metrics = [
         "Energy",
         "Intensity",
@@ -18,7 +39,7 @@ function createPlayers() {
 
     let container = document.getElementById("players")
 
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < players_numbers.length; i++) {
 
         let btn = document.createElement("button")
 
@@ -104,8 +125,16 @@ function submitData() {
     })
 
     csvRows.push(row)
-
+    saveData()
     alert("Saved")
+
+    selectedPlayer = null
+
+    document.querySelectorAll("#players button")
+    .forEach(b => b.classList.remove("selected"))
+
+    document.getElementById("current-player").innerText =
+    "Selected Player: None"
 
     resetSliders()
 }
@@ -187,11 +216,13 @@ function clearData() {
     if (confirmClear) {
 
         csvRows = []
-
+        localStorage.removeItem("playerFeedbackData")
         alert("All data cleared")
 
     }
 }
 
+
+loadData()
 createPlayers()
 createSliders()
