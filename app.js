@@ -3,32 +3,36 @@ let selectedPlayer = null
 let csvRows = []
 
 const metrics = [
-    "Wellness",
-    "Fatigue",
-    "Soreness",
-    "Stress",
-    "Mood",
-    "Sleep"
+        "Energy",
+        "Intensity",
+        "Technical",
+        "Tactical",
+        "Understanding",
+        "Fun"
 ]
+
+const players_numbers = [
+1,2,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,78]
 
 function createPlayers() {
 
     let container = document.getElementById("players")
 
-    for (let i = 1; i <= 18; i++) {
+    for (let i = 0; i < 18; i++) {
 
         let btn = document.createElement("button")
 
-        btn.innerText = i
+        btn.innerText = players_numbers[i]
 
         btn.onclick = () => {
 
-            selectedPlayer = i
+            selectedPlayer = players_numbers[i]
 
             document.querySelectorAll("#players button").forEach(b =>
                 b.classList.remove("selected")
             )
-
+            document.getElementById("current-player").innerText =
+               "Selected Player: " + players_numbers[i];
             btn.classList.add("selected")
         }
 
@@ -126,14 +130,14 @@ function downloadCSV() {
     }
 
     let header = [
-        "date",
-        "player",
-        "wellness",
-        "fatigue",
-        "soreness",
-        "stress",
-        "mood",
-        "sleep"
+        "Date",
+        "Player",
+        "Energy",
+        "Intensity",
+        "Technical",
+        "Tactical",
+        "Understanding",
+        "Fun"
     ]
 
     let csvContent = header.join(",") + "\n"

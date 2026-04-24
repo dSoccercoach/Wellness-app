@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 15px;
+    max-width: 600px;
+    margin: auto;
+}
+
+h2 {
+    margin-top: 25px;
+}
+
+button {
+    font-size: 18px;
+    padding: 12px;
+    margin: 4px;
+    width: 70px;
+    border-radius: 8px;
+}
+
+#players button.selected {
+    background-color: orange;
+    color: white;
+    border: 3px solid darkorange;
+    font-weight: bold;
+    transform: scale(1.08);
+}
+
+.slider-container {
+    margin-top: 15px;
+}
+
+input[type=range] {
+    width: 100%;
+}
+
+.submit-btn {
+    margin-top: 25px;
+    width: 100%;
+    font-size: 22px;
+    padding: 15px;
+    background-color: #2196F3;
+    color: white;
+    border-radius: 10px;
+}
+
+.download-btn {
+    margin-top: 10px;
+    width: 100%;
+    font-size: 18px;
+    padding: 12px;
+    background-color: #555;
+    color: white;
+    border-radius: 10px;
+}
