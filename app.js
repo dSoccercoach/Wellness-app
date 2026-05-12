@@ -151,11 +151,18 @@ function updateValue(metric) {
     document.getElementById(metric + "-value").innerText = value
 }
 
-function getCurrentDateTime() {
+function getCurrentDate() {
 
     let now = new Date()
 
-    return now.toISOString()
+    return now.toLocaleDateString(
+        "en-CA",
+        {
+            timeZone: Intl.DateTimeFormat()
+                .resolvedOptions()
+                .timeZone
+        }
+    )
 }
 
 function submitData() {
@@ -169,7 +176,7 @@ function submitData() {
 
     let row = {
 
-        date: getCurrentDateTime(),
+        date: getCurrentDate(),
 
         player: selectedPlayer,
 
