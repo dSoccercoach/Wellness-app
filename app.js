@@ -30,7 +30,7 @@ const metrics = [
         "Tactical",
         "Understanding",
         "Fun",
-        "Training Performance"
+        "PlayerPerformance"
 ]
 
 const metricLabels = {
@@ -65,7 +65,7 @@ const metricLabels = {
         right: "Very Fun"
     },
 
-    PlayerPerception: {
+    PlayerPerformance: {
         left: "Poor Performance",
         right: "Best Performance"
     }
@@ -188,7 +188,7 @@ function submitData() {
         fun: document.getElementById("Fun").value,
 
         // New fields
-        playerPerception: document.getElementById("Training Performance").value,
+        playerPerception: document.getElementById("PlayerPerformance").value,
         coachRating: 5
     }
 
@@ -246,8 +246,8 @@ function downloadCSV() {
             row.tactical,
             row.understanding,
             row.fun,
+            row.coachRating,
             row.playerPerception,
-            row.coachRating
         ].join(",") + "\n"
     })
 
