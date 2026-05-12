@@ -52,3 +52,11 @@ input[type=range] {
     color: white;
     border-radius: 10px;
 }
+
+.slider-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}

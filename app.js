@@ -29,7 +29,8 @@ const metrics = [
         "Technical",
         "Tactical",
         "Understanding",
-        "Fun"
+        "Fun",
+        "Training Performance"
 ]
 
 const players_numbers = [
@@ -71,17 +72,26 @@ function createSliders() {
 
         div.className = "slider-container"
 
-        div.innerHTML = `
-            <label>${metric}: <span id="${metric}-value">5</span></label>
-            <input
-                type="range"
-                min="1"
-                max="10"
-                value="5"
-                id="${metric}"
-                oninput="updateValue('${metric}')"
-            >
-        `
+      div.innerHTML = `
+    <label>
+        ${metric}:
+        <span id="${metric}-value">5</span>
+    </label>
+
+    <input
+        type="range"
+        min="1"
+        max="10"
+        value="5"
+        id="${metric}"
+        oninput="updateValue('${metric}')"
+    >
+
+    <div class="slider-scale">
+        <span>1 = Too Easy</span>
+        <span>10 = Too Hard</span>
+    </div>
+`
 
         container.appendChild(div)
 
@@ -111,30 +121,29 @@ function submitData() {
         return
     }
 
-    let row = []
+    let row = {
 
-    row.push(getCurrentDateTime())
+        date: getCurrentDateTime(),
 
-    row.push(selectedPlayer)
+        player: selectedPlayer,
 
-    metrics.forEach(metric => {
+        energy: document.getElementById("Energy").value,
+        intensity: document.getElementById("Intensity").value,
+        technical: document.getElementById("Technical").value,
+        tactical: document.getElementById("Tactical").value,
+        understanding: document.getElementById("Understanding").value,
+        fun: document.getElementById("Fun").value,
 
-        let value = document.getElementById(metric).value
-
-        row.push(value)
-    })
+        // New fields
+        playerPerception: document.getElementById("Training Performance").value,
+        coachRating: 5
+    }
 
     csvRows.push(row)
+
     saveData()
+
     alert("Saved")
-
-    selectedPlayer = null
-
-    document.querySelectorAll("#players button")
-    .forEach(b => b.classList.remove("selected"))
-
-    document.getElementById("current-player").innerText =
-    "Selected Player: None"
 
     resetSliders()
 }
@@ -161,19 +170,32 @@ function downloadCSV() {
     let header = [
         "Date",
         "Player",
-        "Energy",
         "Intensity",
+        "Energy",
         "Technical",
         "Tactical",
+        "Fun",
         "Understanding",
-        "Fun"
+        "coachRating",
+        "Training Performance"
     ]
 
     let csvContent = header.join(",") + "\n"
 
-    csvRows.forEach(row => {
+ csvRows.forEach(row => {
 
-        csvContent += row.join(",") + "\n"
+        csvContent += [
+            row.date,
+            row.player,
+            row.energy,
+            row.intensity,
+            row.technical,
+            row.tactical,
+            row.understanding,
+            row.fun,
+            row.playerPerception,
+            row.coachRating
+        ].join(",") + "\n"
     })
 
     let blob = new Blob([csvContent], {
@@ -222,7 +244,126 @@ function clearData() {
     }
 }
 
+function openCoachRatingPopup() {
+
+    // Remove existing popup if already open
+    let existing = document.getElementById("coach-popup")
+
+    if (existing) {
+        existing.remove()
+    }
+
+    // Background overlay
+    let popup = document.createElement("div")
+
+    popup.id = "coach-popup"
+
+    popup.style.position = "fixed"
+    popup.style.top = "0"
+    popup.style.left = "0"
+    popup.style.width = "100%"
+    popup.style.height = "100%"
+    popup.style.backgroundColor = "rgba(0,0,0,0.7)"
+    popup.style.zIndex = "9999"
+    popup.style.overflow = "auto"
+    popup.style.padding = "20px"
+
+    // White content box
+    let content = document.createElement("div")
+
+    content.style.background = "white"
+    content.style.padding = "20px"
+    content.style.borderRadius = "10px"
+    content.style.maxWidth = "600px"
+    content.style.margin = "auto"
+
+    // Title
+    let title = document.createElement("h2")
+
+    title.innerText = "Coach Ratings"
+
+    content.appendChild(title)
+
+    // Unique players who submitted data
+    let players = [...new Set(csvRows.map(r => r.player))]
+
+    players.forEach(player => {
+
+        let container = document.createElement("div")
+
+        container.style.marginBottom = "20px"
+
+        // Label
+        let label = document.createElement("label")
+
+        label.innerText = "Player " + player + ": "
+
+        // Value display
+        let valueSpan = document.createElement("span")
+
+        valueSpan.id = "coach-value-" + player
+
+        valueSpan.innerText = "5"
+
+        // Slider
+        let slider = document.createElement("input")
+
+        slider.type = "range"
+        slider.min = "1"
+        slider.max = "10"
+        slider.value = "5"
+
+        slider.style.width = "100%"
+
+        slider.oninput = () => {
+
+        valueSpan.innerText = slider.value
+
+        // Update all entries for that player
+        csvRows.forEach(row => {
+
+            if (row.player == player) {
+
+                        row.coachRating = slider.value
+                    }
+                })
+
+            saveData()
+        }
+
+        container.appendChild(label)
+        container.appendChild(valueSpan)
+        container.appendChild(document.createElement("br"))
+        container.appendChild(slider)
+
+        content.appendChild(container)
+    })
+
+    // Close button
+    let closeBtn = document.createElement("button")
+
+    closeBtn.innerText = "Close"
+
+    closeBtn.className = "download-btn"
+
+    closeBtn.onclick = () => {
+
+        popup.remove()
+    }
+
+    content.appendChild(closeBtn)
+
+    popup.appendChild(content)
+
+    document.body.appendChild(popup)
+}
 
 loadData()
 createPlayers()
 createSliders()
+if ("serviceWorker" in navigator) {
+
+    navigator.serviceWorker
+        .register("./service-worker.js")
+        .then(() => console.log("Service Worker Registered"))
+}
