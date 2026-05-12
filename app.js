@@ -33,6 +33,44 @@ const metrics = [
         "Training Performance"
 ]
 
+const metricLabels = {
+
+    Energy: {
+        left: "Exhausted",
+        right: "Full Energy"
+    },
+
+    Intensity: {
+        left: "Very Low",
+        right: "Very High"
+    },
+
+    Technical: {
+        left: "Very Easy",
+        right: "Very Hard"
+    },
+
+    Tactical: {
+        left: "Very Easy",
+        right: "Very Hard"
+    },
+
+    Understanding: {
+        left: "Confused",
+        right: "Very Clear"
+    },
+
+    Fun: {
+        left: "Not Fun",
+        right: "Very Fun"
+    },
+
+    PlayerPerception: {
+        left: "Poor Performance",
+        right: "Best Performance"
+    }
+}
+
 const players_numbers = [
 1,2,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,78]
 
@@ -72,26 +110,34 @@ function createSliders() {
 
         div.className = "slider-container"
 
-      div.innerHTML = `
-    <label>
-        ${metric}:
-        <span id="${metric}-value">5</span>
-    </label>
+        div.innerHTML = `
 
-    <input
-        type="range"
-        min="1"
-        max="10"
-        value="5"
-        id="${metric}"
-        oninput="updateValue('${metric}')"
-    >
+            <label>
+                ${metric}:
+                <span id="${metric}-value">5</span>
+            </label>
 
-    <div class="slider-scale">
-        <span>1 = Too Easy</span>
-        <span>10 = Too Hard</span>
-    </div>
-`
+            <input
+                type="range"
+                min="1"
+                max="10"
+                value="5"
+                id="${metric}"
+                oninput="updateValue('${metric}')"
+            >
+
+            <div class="slider-scale">
+
+                <span>
+                    ${metricLabels[metric].left}
+                </span>
+
+                <span>
+                    ${metricLabels[metric].right}
+                </span>
+
+            </div>
+        `
 
         container.appendChild(div)
 
