@@ -256,12 +256,12 @@ async function downloadCSV() {
 
     let file = new File(
 
-        [csvContent],
+        ["\uFEFF" + csvContent],
 
         "player_feedback.csv",
 
         {
-            type: "text/csv"
+            type: "text/csv;charset=utf-8"
         }
     )
 
