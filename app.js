@@ -211,7 +211,7 @@ function resetSliders() {
     })
 }
 
-function downloadCSV() {
+async function downloadCSV() {
 
     if (csvRows.length === 0) {
 
@@ -221,23 +221,25 @@ function downloadCSV() {
     }
 
     let header = [
-        "Date",
-        "Player",
-        "Intensity",
-        "Energy",
-        "Technical",
-        "Tactical",
-        "Fun",
-        "Understanding",
-        "coachRating",
-        "Training Performance"
+
+        "date",
+        "player",
+        "energy",
+        "intensity",
+        "technical",
+        "tactical",
+        "understanding",
+        "fun",
+        "performance",
+        "coachRating"
     ]
 
     let csvContent = header.join(",") + "\n"
 
- csvRows.forEach(row => {
+    csvRows.forEach(row => {
 
         csvContent += [
+
             row.date,
             row.player,
             row.energy,
@@ -246,33 +248,58 @@ function downloadCSV() {
             row.tactical,
             row.understanding,
             row.fun,
-            row.coachRating,
-            row.playerPerception,
+            row.performance,
+            row.coachRating
+
         ].join(",") + "\n"
     })
 
-    let blob = new Blob([csvContent], {
-        type: "text/csv"
-    })
+    let file = new File(
 
-    let url = window.URL.createObjectURL(blob)
+        [csvContent],
 
-    let a = document.createElement("a")
+        "player_feedback.csv",
 
-    a.setAttribute("hidden", "")
-
-    a.setAttribute("href", url)
-
-    a.setAttribute(
-        "download",
-        "player_feedback.csv"
+        {
+            type: "text/csv"
+        }
     )
 
-    document.body.appendChild(a)
+    // iPhone/iPad native sharing
+    if (navigator.share) {
 
-    a.click()
+        try {
 
-    document.body.removeChild(a)
+            await navigator.share({
+
+                files: [file],
+
+                title: "Player Feedback CSV"
+
+            })
+
+        } catch (err) {
+
+            console.log("Share cancelled")
+        }
+
+    } else {
+
+        // fallback desktop download
+
+        let url =
+            URL.createObjectURL(file)
+
+        let a =
+            document.createElement("a")
+
+        a.href = url
+
+        a.download =
+            "player_feedback.csv"
+
+        a.click()
+    }
 }
 
 function clearData() {
@@ -295,6 +322,78 @@ function clearData() {
         alert("All data cleared")
 
     }
+}
+
+function copyCSV() {
+
+    if (csvRows.length === 0) {
+
+        alert("No data yet")
+
+        return
+    }
+
+    let header = [
+
+        "date",
+        "player",
+        "energy",
+        "intensity",
+        "technical",
+        "tactical",
+        "understanding",
+        "fun",
+        "performance",
+        "coachRating"
+    ]
+
+    let csvContent = header.join(",") + "\n"
+
+    csvRows.forEach(row => {
+
+        csvContent += [
+
+            row.date,
+            row.player,
+            row.energy,
+            row.intensity,
+            row.technical,
+            row.tactical,
+            row.understanding,
+            row.fun,
+            row.performance,
+            row.coachRating
+
+        ].join(",") + "\n"
+    })
+
+    // Create hidden textarea
+    let textarea =
+        document.createElement("textarea")
+
+    textarea.value = csvContent
+
+    document.body.appendChild(textarea)
+
+    textarea.select()
+
+    textarea.setSelectionRange(
+        0,
+        999999
+    )
+
+    try {
+
+        document.execCommand("copy")
+
+        alert("CSV copied to clipboard")
+
+    } catch (err) {
+
+        alert("Copy failed")
+    }
+
+    document.body.removeChild(textarea)
 }
 
 function openCoachRatingPopup() {
