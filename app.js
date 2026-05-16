@@ -230,11 +230,11 @@ async function downloadCSV() {
         "tactical",
         "understanding",
         "fun",
-        "performance",
+        "PlayerPerformance",
         "coachRating"
     ]
 
-    let csvContent = header.join(",") + "\n"
+    let csvContent = header.join(",") + "\r\n"
 
     csvRows.forEach(row => {
 
@@ -248,20 +248,29 @@ async function downloadCSV() {
             row.tactical,
             row.understanding,
             row.fun,
-            row.performance,
+            row.playerPerception,
             row.coachRating
 
-        ].join(",") + "\n"
+        ].join(",") + "\r\n"
     })
+
+       let blob = new Blob(
+
+        ["\uFEFF" + csvContent],
+
+        {
+            type: "text/plain;charset=utf-8"
+        }
+    )
 
     let file = new File(
 
-        ["\uFEFF" + csvContent],
+        [blob],
 
         "player_feedback.csv",
 
         {
-            type: "text/csv;charset=utf-8"
+            type: "text/plain"
         }
     )
 
@@ -343,11 +352,11 @@ function copyCSV() {
         "tactical",
         "understanding",
         "fun",
-        "performance",
+        "playerPerception",
         "coachRating"
     ]
 
-    let csvContent = header.join(",") + "\n"
+    let csvContent = header.join(",") + "\r\n"
 
     csvRows.forEach(row => {
 
@@ -361,10 +370,10 @@ function copyCSV() {
             row.tactical,
             row.understanding,
             row.fun,
-            row.performance,
+            row.playerPerception,
             row.coachRating
 
-        ].join(",") + "\n"
+        ].join(",") + "\r\n"
     })
 
     // Create hidden textarea
